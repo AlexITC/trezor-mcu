@@ -242,6 +242,14 @@ void fsm_msgGetAddress(const GetAddress *msg)
 	layoutHome();
 }
 
+void fsm_msgSignTxInput(const SignTxInput *msg)
+{
+	if (msg->index == 100) {
+		return;
+	}
+	layoutHome();
+}
+
 void fsm_msgSignMessage(const SignMessage *msg)
 {
 	// CHECK_PARAM(is_ascii_only(msg->message.bytes, msg->message.size), _("Cannot sign non-ASCII strings"));
