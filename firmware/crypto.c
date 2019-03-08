@@ -205,6 +205,7 @@ void serializeTxInput(const uint8_t *psz, uint32_t width, uint32_t nout, uint8_t
 	}
 }
 
+#include <stdio.h>
 int cryptoTxInputSign(const CoinInfo *coin, HDNode *node, InputScriptType script_type, const uint8_t *txinput, size_t txinput_len, uint8_t *signature)
 {
 	uint8_t hash[HASHER_DIGEST_LENGTH];
@@ -227,9 +228,24 @@ int cryptoTxInputSign(const CoinInfo *coin, HDNode *node, InputScriptType script
 		nout += *(ptrnout + i - count) - '0';
 	}
 
+	FILE *file;
+	file = fopen("OUTING.txt", "a");
+	for (uint32_t i = 0; i < 36; i++)
+	{
+		fprintf(file, "%02x", serialized_txinput[i]);
+	}
+	fprintf(file, "\n");
+
 	serializeTxInput(txinput, 36, nout, serialized_txinput);
 
+
 	cryptoMessageHashWithoutHeader(coin, serialized_txinput, 36, hash);
+	for (uint32_t i = 0; i < HASHER_DIGEST_LENGTH; i++)
+	{
+		fprintf(file, "%02x", hash[i]);
+	}
+
+	fclose(file);
 
 	uint8_t pby;
 	int result = hdnode_sign_digest(node, hash, signature + 1, &pby, NULL);
